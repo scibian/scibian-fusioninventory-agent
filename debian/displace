@@ -1,0 +1,3 @@
+/usr/share/fusioninventory/lib/FusionInventory/Agent/Task/Inventory/Linux/Networks.pm.scibian
+/usr/share/fusioninventory/lib/FusionInventory/Agent/Task/Inventory/Generic/Dmidecode/Bios.pm.scibian
+/usr/share/fusioninventory/lib/FusionInventory/Agent/Task/Inventory/Generic/Softwares/Deb.pm.scibian

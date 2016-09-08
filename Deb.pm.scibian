@@ -1,0 +1,108 @@
+package FusionInventory::Agent::Task::Inventory::Generic::Softwares::Deb;
+
+use strict;
+use warnings;
+
+use FusionInventory::Agent::Tools;
+
+sub isEnabled {
+    return canRun('dpkg-query');
+}
+
+sub doEDCInventory {
+    my (%params) = @_;
+
+    my $inventory = $params{inventory};
+    my $logger    = $params{logger};
+
+    my $edc_dir = '/usr/share/edc-calibre/packages/';
+
+    return unless (-d $edc_dir);
+
+    my @edc_envs = glob($edc_dir.'{devel,compat}-*');
+
+    for my $env (@edc_envs)  {
+        $env =~ s,^.+/,,;
+
+        my $command =
+            'schroot -c ' . $env . ' -- ' .
+            'dpkg-query --show --showformat=\'' .
+            '${db:Status-Status}\t' .
+            '${Package}\t' .
+            '${Architecture}\t' .
+            '${Version}\t'.
+            '${Installed-Size}\t' .
+            '${Description}\n' .
+            '\'';
+
+        my $packages = _getPackagesList(
+            logger => $logger, command => $command
+        );
+        next unless $packages;
+
+       foreach my $package (@$packages) {
+           $inventory->addEntry(
+                section => 'SOFTWARES',
+                entry   => $package
+           );
+       }
+    }
+}
+
+sub doInventory {
+    my (%params) = @_;
+
+    my $inventory = $params{inventory};
+    my $logger    = $params{logger};
+
+    my $command =
+        'dpkg-query --show --showformat=\'' .
+        '${db:Status-Status}\t' .
+        '${Package}\t' .
+        '${Architecture}\t' .
+        '${Version}\t'.
+        '${Installed-Size}\t' .
+        '${Description}\n' .
+        '\'';
+
+    my $packages = _getPackagesList(
+        logger => $logger, command => $command
+    );
+    return unless $packages;
+
+    foreach my $package (@$packages) {
+        $inventory->addEntry(
+            section => 'SOFTWARES',
+            entry   => $package
+        );
+    }
+    doEDCInventory(@_);
+}
+
+sub _getPackagesList {
+    my $handle = getFileHandle(@_);
+    return unless $handle;
+
+    my @packages;
+    while (my $line = <$handle>) {
+        # skip descriptions
+        next if $line =~ /^ /;
+        chomp $line;
+        my @infos = split("\t", $line);
+        if ($infos[0] ne "config-files") {
+            push @packages, {
+                NAME        => $infos[1],
+                ARCH        => $infos[2],
+                VERSION     => $infos[3],
+                FILESIZE    => $infos[4],
+                COMMENTS    => $infos[5],
+                FROM        => 'deb'
+            };
+        }
+    }
+    close $handle;
+
+    return \@packages;
+}
+
+1;

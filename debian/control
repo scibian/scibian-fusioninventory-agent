@@ -1,0 +1,12 @@
+Source: scibian-fusioninventory-agent
+Section: edf
+Priority: extra
+Maintainer: Scibian Packaging Team <packaging@scibian.org>
+Build-Depends: debhelper (>= 9), config-package-dev
+Standards-Version: 3.9.6
+
+Package: scibian-fusioninventory-agent
+Architecture: all
+Depends: fusioninventory-agent, ethtool, libjson-perl
+Description: Fusioninventory modules for Scibian
+ Custom Fusion inventory modules for Scibian

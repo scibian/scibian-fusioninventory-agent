@@ -1,0 +1,5 @@
+Bios.pm.scibian usr/share/fusioninventory/lib/FusionInventory/Agent/Task/Inventory/Generic/Dmidecode
+Deb.pm.scibian usr/share/fusioninventory/lib/FusionInventory/Agent/Task/Inventory/Generic/Softwares
+Networks.pm.scibian usr/share/fusioninventory/lib/FusionInventory/Agent/Task/Inventory/Linux
+Puppet.pm usr/share/fusioninventory/lib/FusionInventory/Agent/Task/Inventory/Generic
+ED.pm usr/share/fusioninventory/lib/FusionInventory/Agent/Task/Inventory/Generic

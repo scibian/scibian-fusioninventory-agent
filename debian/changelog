@@ -1,0 +1,5 @@
+scibian-fusioninventory-agent (8.0) jessie; urgency=low
+
+  * Initial release.
+
+ -- Scibian Packaging Team <packaging@scibian.org>  Thu, 08 Sep 2016 10:45:53 +0200
